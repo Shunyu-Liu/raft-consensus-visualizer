@@ -17,6 +17,7 @@ interface InspectorProps {
   onSelectMessage: (messageId: string) => void;
   onCrashNode: (nodeId: NodeId) => NodeOperationResult;
   onRestartNode: (nodeId: NodeId) => NodeOperationResult;
+  mutationsDisabled?: boolean;
 }
 
 export function Inspector({
@@ -28,6 +29,7 @@ export function Inspector({
   onSelectMessage,
   onCrashNode,
   onRestartNode,
+  mutationsDisabled = false,
 }: InspectorProps) {
   const [activeTab, setActiveTab] = useState<InspectorTab>("explanation");
   const selectedNode = selectedNodeId ? clusterState.nodes[selectedNodeId] : null;
@@ -183,14 +185,14 @@ export function Inspector({
               <button
                 type="button"
                 onClick={() => onCrashNode(selectedNode.id)}
-                disabled={selectedNode.status === "crashed"}
+                disabled={mutationsDisabled || selectedNode.status === "crashed"}
               >
                 Crash Node
               </button>
               <button
                 type="button"
                 onClick={() => onRestartNode(selectedNode.id)}
-                disabled={selectedNode.status === "running"}
+                disabled={mutationsDisabled || selectedNode.status === "running"}
               >
                 Restart Node
               </button>

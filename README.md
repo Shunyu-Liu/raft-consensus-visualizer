@@ -181,12 +181,30 @@ npm run lint
 npm run test
 npm run test:watch
 npm run test:coverage
+npm run test:e2e
 npm run build
 npm run preview
 npm run check
+npm run check:full
 ```
 
 `npm run check` runs typecheck, lint, tests, and production build.
+
+`npm run check:full` adds coverage thresholds and Chromium end-to-end tests.
+
+## Verification and Reproducibility
+
+Raft Explorer uses runtime protocol invariant checking and deterministic replay to make teaching runs reproducible and inspectable:
+
+- Protocol invariants after deterministic state transitions
+- Every-step audits for all five scenarios
+- Versioned JSON trace export and validated import
+- Real action replay with state, event ID, message ID, and logical-time comparison
+- Time travel through replayed action steps
+- Raft-aware comparison with the previous action state
+- Playwright Chromium tests for routes, scenarios, traces, history, and browser errors
+
+This is runtime invariant checking and deterministic replay. Raft Explorer is not a formally verified Raft implementation and does not claim a model-checking, TLA+, or protocol correctness proof.
 
 ## Documentation
 
@@ -196,6 +214,8 @@ npm run check
 - [Roadmap](docs/ROADMAP.md)
 - [GitHub Setup](docs/GITHUB_SETUP.md)
 - [Dependency Security](docs/DEPENDENCY_SECURITY.md)
+- [Verification](docs/VERIFICATION.md)
+- [Trace Format](docs/TRACE_FORMAT.md)
 - [Release Checklist](docs/RELEASE_CHECKLIST.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
