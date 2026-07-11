@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-11
+
 ### Added
 
 - Runtime Raft invariant checking and every-step audits for all five deterministic scenarios.
