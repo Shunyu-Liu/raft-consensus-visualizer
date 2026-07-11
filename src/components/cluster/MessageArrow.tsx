@@ -19,8 +19,8 @@ export function MessageArrow({ message, route, isSelected, isPinned, activityKin
   return (
     <g className={styles.arrowGroup} data-message-id={message.id} data-message-type={message.type} data-from={message.from} data-to={message.to} data-status={message.status} data-selected={isSelected} data-pinned={isPinned} data-activity={activityKind} data-activity-step={activityStep} data-visibility-age={visibilityAge} data-lane={route.lane} onClick={onSelect}>
       <path className={styles.hitPath} d={route.path} data-route-path="hit" />
-      <path className={styles.path} d={route.path} data-route-path="visual" />
-      <foreignObject x={route.labelX - 54} y={route.labelY - 14} width="108" height="28">
+      <path className={styles.path} d={route.path} markerEnd="url(#message-arrow)" data-route-path="visual" />
+      <foreignObject x={route.labelRect.x} y={route.labelRect.y} width={route.labelWidth} height={route.labelHeight}>
         <button type="button" className={styles.label} aria-label={`${getCompactMessageLabel(message)} from Node ${message.from} to Node ${message.to}, ${message.status}${isPinned ? ", pinned historical message" : ""}`} onClick={onSelect}>
           {getCompactMessageLabel(message)}{isPinned ? " · Pinned" : ""}
         </button>

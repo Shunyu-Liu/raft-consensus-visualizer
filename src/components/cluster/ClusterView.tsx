@@ -5,6 +5,7 @@ import type { TraceActionRecord } from "../../simulator/trace/types";
 import { MessageLayer } from "./MessageLayer";
 import { type MessageActivityFrame } from "./messageActivity";
 import { type NodeBounds } from "./messageRouting";
+import { getVisibleMessages } from "./messageVisibility";
 import { NodeCard } from "./NodeCard";
 import styles from "./ClusterView.module.css";
 
@@ -45,7 +46,7 @@ export function ClusterView({ nodes, messages, selectedNodeId, selectedMessageId
   const groups = getPartitionGroups(clusterState);
   const currentAction = actionHistory[currentActionStep - 1];
   const summary = currentAction ? getCurrentActionSummary(currentAction.action, messages) : "Initial cluster state";
-  const visibleCount = getVisibleCount(messages, messageDisplayMode, currentActionStep, activityFrames, pinnedMessageId);
+  const visibleCount = getVisibleMessages(messages, messageDisplayMode, currentActionStep, activityFrames, pinnedMessageId).length;
   const noRpc = currentActionStep > 0 && (activityFrames[currentActionStep - 1]?.messageIds.length ?? 0) === 0;
 
   return <section ref={panelRef} className={styles.clusterPanel} aria-labelledby="cluster-title">
@@ -59,14 +60,6 @@ export function ClusterView({ nodes, messages, selectedNodeId, selectedMessageId
     </div>
     <MessageLayer messages={messages} nodeBounds={bounds} selectedMessageId={selectedMessageId} pinnedMessageId={pinnedMessageId} displayMode={messageDisplayMode} currentActionStep={currentActionStep} activityFrames={activityFrames} onSelectMessage={onSelectMessage} />
   </section>;
-}
-
-function getVisibleCount(messages: RaftMessage[], mode: MessageDisplayMode, step: number, frames: MessageActivityFrame[], pinned: MessageId | null): number {
-  if (mode === "all") return messages.length;
-  const start = mode === "focus" ? step : Math.max(1, step - 2);
-  const ids = new Set(frames.filter((frame) => frame.actionStep >= start && frame.actionStep <= step).flatMap((frame) => frame.messageIds));
-  if (pinned && messages.some((message) => message.id === pinned)) ids.add(pinned);
-  return [...ids].filter((id) => messages.some((message) => message.id === id)).length;
 }
 
 function getCurrentActionSummary(action: TraceActionRecord["action"], messages: RaftMessage[]): string {

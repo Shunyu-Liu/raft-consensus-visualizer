@@ -40,6 +40,10 @@ describe("message focus and deterministic routing", () => {
     expect(Math.sign(lanes.get("m1") ?? 0)).toBe(-Math.sign(lanes.get("m3") ?? 0));
     const route = createRoute(messages[0], { centerX: 0, centerY: 0, width: 100, height: 60 }, { centerX: 300, centerY: 0, width: 100, height: 60 }, lanes.get("m1") ?? 1, [{ centerX: 150, centerY: 160, width: 80, height: 50 }]);
     expect(route.path).toContain("M");
+    expect(route.samplePoints).toHaveLength(22);
+    expect(route.labelWidth).toBeGreaterThanOrEqual(72);
+    expect(route.labelRect).toMatchObject({ height: 28 });
+    expect(route.labelX).toBeCloseTo(route.labelRect.x + route.labelWidth / 2);
   });
 
   it("builds one activity frame per action snapshot", () => {

@@ -11,3 +11,8 @@ export function getVisibleMessageIds(messages: RaftMessage[], mode: MessageDispl
   if (pinnedMessageId && messages.some((message) => message.id === pinnedMessageId)) ids.add(pinnedMessageId);
   return ids;
 }
+
+export function getVisibleMessages(messages: RaftMessage[], mode: MessageDisplayMode, currentActionStep: number, frames: MessageActivityFrame[], pinnedMessageId: MessageId | null): RaftMessage[] {
+  const ids = getVisibleMessageIds(messages, mode, currentActionStep, frames, pinnedMessageId);
+  return messages.filter((message) => ids.has(message.id));
+}

@@ -124,7 +124,12 @@ export function Inspector({
         <MessageInspector message={selectedMessage} clusterState={clusterState} />
         {selectedMessage ? (() => {
           const visible = getVisibleMessageIds(clusterState.messages, messageDisplayMode, currentActionStep, activityFrames, null).has(selectedMessage.id);
-          return <>{!visible ? <p className={styles.empty}>This message is outside the current Focus view.</p> : null}<button type="button" onClick={() => onPinMessage(pinnedMessageId === selectedMessage.id ? null : selectedMessage.id)}>{pinnedMessageId === selectedMessage.id ? "Unpin from canvas" : "Pin on canvas"}</button></>;
+          const hiddenCopy = messageDisplayMode === "focus"
+            ? "This message is outside the current Focus view."
+            : messageDisplayMode === "context"
+              ? "This message is outside the current Context view."
+              : "This message is not present in the current snapshot.";
+          return <>{!visible ? <p className={styles.empty}>{hiddenCopy}</p> : null}<button type="button" onClick={() => onPinMessage(pinnedMessageId === selectedMessage.id ? null : selectedMessage.id)}>{pinnedMessageId === selectedMessage.id ? "Unpin from canvas" : "Pin on canvas"}</button></>;
         })() : null}
       </section>
       ) : null}

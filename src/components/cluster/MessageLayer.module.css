@@ -26,7 +26,7 @@
 }
 
 .marker {
-  fill: var(--accent);
+  fill: context-stroke;
 }
 
 .label {

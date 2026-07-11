@@ -78,3 +78,25 @@ test("Request and response routes use distinct deterministic paths", async ({ pa
   expect(hasDistinctReverse).toBe(true);
   assertNoBrowserErrors();
 });
+
+test("rendered message counts and SVG arrowheads stay intact in every view", async ({ page, assertNoBrowserErrors }) => {
+  await page.goto("/#/simulator");
+  await advance(page, 12);
+  const modes = [
+    "Show messages from the current action",
+    "Show messages from the last three actions",
+    "Show all messages in the current snapshot",
+  ];
+  for (const mode of modes) {
+    await page.getByRole("radio", { name: mode }).click();
+    const declared = Number(await page.getByTestId("visible-message-count").getAttribute("data-visible-message-count"));
+    expect(await page.locator("g[data-message-id]").count()).toBe(declared);
+    if (declared > 0) {
+      expect(await page.locator('path[data-route-path="visual"]').first().getAttribute("marker-end")).toBe("url(#message-arrow)");
+      expect(await page.locator('path[data-route-path="hit"]').first().getAttribute("marker-end")).toBeNull();
+    }
+  }
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await page.locator('path[data-route-path="visual"]').first().getAttribute("marker-end")).toBe("url(#message-arrow)");
+  assertNoBrowserErrors();
+});

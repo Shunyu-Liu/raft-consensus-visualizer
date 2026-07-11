@@ -1,8 +1,8 @@
 import type { MessageDisplayMode, MessageId, NodeId, RaftMessage } from "../../simulator/types";
 import type { MessageActivityFrame } from "./messageActivity";
-import { getVisibleMessageIds } from "./messageVisibility";
+import { getVisibleMessages } from "./messageVisibility";
 import { MessageArrow } from "./MessageArrow";
-import { assignDirectionalLanes, createRoute, type NodeBounds, type Route } from "./messageRouting";
+import { assignDirectionalLanes, createRoute, type AcceptedLayout, type NodeBounds } from "./messageRouting";
 import styles from "./MessageLayer.module.css";
 
 interface MessageLayerProps {
@@ -20,10 +20,9 @@ export function MessageLayer({
   messages, nodeBounds, selectedMessageId, pinnedMessageId, displayMode,
   currentActionStep, activityFrames, onSelectMessage,
 }: MessageLayerProps) {
-  const visibleIds = getVisibleMessageIds(messages, displayMode, currentActionStep, activityFrames, pinnedMessageId);
-  const visibleMessages = messages.filter((message) => visibleIds.has(message.id));
+  const visibleMessages = getVisibleMessages(messages, displayMode, currentActionStep, activityFrames, pinnedMessageId);
   const lanes = assignDirectionalLanes(visibleMessages);
-  const accepted: Route[] = [];
+  const accepted: AcceptedLayout = { routes: [], labels: [] };
 
   return (
     <svg className={styles.layer} aria-label="Raft RPC messages" data-visible-message-count={visibleMessages.length}>
@@ -32,8 +31,9 @@ export function MessageLayer({
         const from = nodeBounds[message.from]; const to = nodeBounds[message.to];
         if (!from || !to) return null;
         const obstacles = Object.entries(nodeBounds).filter(([id]) => id !== message.from && id !== message.to).map(([, bounds]) => bounds);
-        const route = createRoute(message, from, to, lanes.get(message.id) ?? 0, obstacles, accepted);
-        accepted.push(route);
+        const route = createRoute(message, from, to, lanes.get(message.id) ?? 0, obstacles, accepted, Object.values(nodeBounds));
+        accepted.routes.push(route);
+        accepted.labels.push(route.labelRect);
         const frame = activityFrames.find((candidate) => candidate.actionStep === currentActionStep);
         const activityStep = [...activityFrames].reverse().find((candidate) => candidate.messageIds.includes(message.id) && candidate.actionStep <= currentActionStep)?.actionStep;
         const naturalStart = displayMode === "focus" ? currentActionStep : Math.max(1, currentActionStep - 2);
