@@ -3,6 +3,8 @@ import { areNodesConnected } from "../../simulator/network/topology";
 import type { ClusterState, LogEntry, NodeId, RaftNode, SimulatorUIState } from "../../simulator/types";
 import type { NodeOperationResult } from "../../simulator/transitions/failure";
 import { getMessageDisplayName } from "../cluster/messageDisplay";
+import { getVisibleMessageIds } from "../cluster/messageVisibility";
+import type { MessageActivityFrame } from "../cluster/messageActivity";
 import { MessageInspector } from "./MessageInspector";
 import styles from "./Inspector.module.css";
 
@@ -15,6 +17,11 @@ interface InspectorProps {
   displayMode: SimulatorUIState["displayMode"];
   scenarioDescription: string;
   onSelectMessage: (messageId: string) => void;
+  pinnedMessageId: string | null;
+  onPinMessage: (messageId: string | null) => void;
+  messageDisplayMode: SimulatorUIState["messageDisplayMode"];
+  currentActionStep: number;
+  activityFrames: MessageActivityFrame[];
   onCrashNode: (nodeId: NodeId) => NodeOperationResult;
   onRestartNode: (nodeId: NodeId) => NodeOperationResult;
   mutationsDisabled?: boolean;
@@ -27,6 +34,11 @@ export function Inspector({
   displayMode,
   scenarioDescription,
   onSelectMessage,
+  pinnedMessageId,
+  onPinMessage,
+  messageDisplayMode,
+  currentActionStep,
+  activityFrames,
   onCrashNode,
   onRestartNode,
   mutationsDisabled = false,
@@ -110,6 +122,15 @@ export function Inspector({
       >
         <h2>Message Inspector</h2>
         <MessageInspector message={selectedMessage} clusterState={clusterState} />
+        {selectedMessage ? (() => {
+          const visible = getVisibleMessageIds(clusterState.messages, messageDisplayMode, currentActionStep, activityFrames, null).has(selectedMessage.id);
+          const hiddenCopy = messageDisplayMode === "focus"
+            ? "This message is outside the current Focus view."
+            : messageDisplayMode === "context"
+              ? "This message is outside the current Context view."
+              : "This message is not present in the current snapshot.";
+          return <>{!visible ? <p className={styles.empty}>{hiddenCopy}</p> : null}<button type="button" onClick={() => onPinMessage(pinnedMessageId === selectedMessage.id ? null : selectedMessage.id)}>{pinnedMessageId === selectedMessage.id ? "Unpin from canvas" : "Pin on canvas"}</button></>;
+        })() : null}
       </section>
       ) : null}
 

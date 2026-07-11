@@ -14,6 +14,21 @@
   margin-bottom: 22px;
 }
 
+.messageControls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 430px;
+}
+
+.messageControls span { color: var(--text-secondary); font-size: 0.78rem; font-weight: 800; }
+.messageControls button { border: 1px solid var(--border-muted); border-radius: 6px; padding: 5px 9px; color: var(--text-secondary); background: var(--surface-panel); font-size: 0.76rem; font-weight: 800; }
+.messageControls button[aria-checked="true"] { color: var(--text-primary); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-panel)); }
+.messageControls small { width: 100%; text-align: right; color: var(--text-secondary); }
+.noRpc { color: var(--text-secondary); font-style: italic; }
+
 .panelHeader h2 {
   margin: 0;
   font-size: 1rem;
@@ -88,6 +103,9 @@
 }
 
 @media (max-width: 760px) {
+  .panelHeader { flex-direction: column; }
+  .messageControls { justify-content: flex-start; max-width: none; }
+  .messageControls small { text-align: left; }
   .clusterGrid {
     grid-template-areas:
       "nodeA"

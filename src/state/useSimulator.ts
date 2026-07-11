@@ -18,6 +18,7 @@ import type {
   SimulatorControlState,
   SimulatorUIState,
 } from "../simulator/types";
+import { buildMessageActivityFrames } from "../components/cluster/messageActivity";
 
 export function useSimulator() {
   const initialScenario = getAvailableScenarios()[0];
@@ -44,6 +45,8 @@ export function useSimulator() {
     isInspectingHistory: false,
     selectedHistoryStep: 0,
     historyStepCount: 0,
+    messageDisplayMode: "focus",
+    pinnedMessageId: null,
   });
   const scenarios = getAvailableScenarios();
 
@@ -85,6 +88,7 @@ export function useSimulator() {
       isInspectingHistory: false,
       selectedHistoryStep: 0,
       historyStepCount: 0,
+      pinnedMessageId: null,
     }));
   }, [refreshState]);
 
@@ -136,6 +140,7 @@ export function useSimulator() {
       isInspectingHistory: false,
       selectedHistoryStep: 0,
       historyStepCount: 0,
+      pinnedMessageId: null,
     }));
   }, []);
 
@@ -206,6 +211,14 @@ export function useSimulator() {
     }));
   }
 
+  const setMessageDisplayMode = useCallback((messageDisplayMode: SimulatorUIState["messageDisplayMode"]) => {
+    setUiState((current) => ({ ...current, messageDisplayMode }));
+  }, []);
+
+  const pinMessage = useCallback((messageId: string | null) => {
+    setUiState((current) => ({ ...current, pinnedMessageId: messageId }));
+  }, []);
+
   function toggleDisplayMode() {
     setUiState((current) => ({
       ...current,
@@ -236,6 +249,7 @@ export function useSimulator() {
       selectedHistoryStep: clampedStep,
       historyStepCount: trace.executedActions.length,
       selectedMessageId: null,
+      pinnedMessageId: null,
     }));
   }, [createTrace]);
 
@@ -264,6 +278,7 @@ export function useSimulator() {
       selectedHistoryStep: trace.executedActions.length,
       historyStepCount: trace.executedActions.length,
       selectedMessageId: null,
+      pinnedMessageId: null,
     }));
     return { accepted: true };
   }, []);
@@ -274,6 +289,8 @@ export function useSimulator() {
     ? simulatorRef.current.getHistoryState(Math.min(uiState.selectedHistoryStep - 1, simulatorRef.current.getActionHistory().length))
     : simulatorRef.current.getInitialState();
   const stateComparison = compareRaftStates(comparisonState, clusterState);
+  const actionHistory = simulatorRef.current.getActionHistory();
+  const activityFrames = buildMessageActivityFrames(simulatorRef.current.getInitialState(), actionHistory);
 
   return {
     clusterState,
@@ -303,5 +320,9 @@ export function useSimulator() {
     viewHistoryStep,
     returnToLive,
     stateComparison,
+    actionHistory,
+    activityFrames,
+    setMessageDisplayMode,
+    pinMessage,
   };
 }

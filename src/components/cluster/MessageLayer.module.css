@@ -16,6 +16,7 @@
   stroke: var(--accent);
   stroke-width: 2;
   opacity: 0.78;
+  transition: opacity 180ms ease, stroke-width 180ms ease;
 }
 
 .hitPath {
@@ -25,7 +26,7 @@
 }
 
 .marker {
-  fill: var(--accent);
+  fill: context-stroke;
 }
 
 .label {
@@ -38,6 +39,16 @@
   font-size: 0.68rem;
   font-weight: 800;
   box-shadow: var(--shadow-soft);
+}
+
+.arrowGroup[data-activity="updated"] .path { opacity: 0.9; }
+.arrowGroup[data-pinned="true"] .path { stroke: var(--text-secondary); stroke-dasharray: 3 6; opacity: 0.55; }
+.arrowGroup[data-pinned="true"] .label { border-style: dashed; color: var(--text-secondary); }
+.arrowGroup[data-selected="true"] .label { border-color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .path { transition: none; }
+  .arrowGroup[data-status="queued"] .path { animation: none; }
 }
 
 .arrowGroup[data-message-type="request_vote"] .path {

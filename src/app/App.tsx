@@ -45,6 +45,10 @@ export function App() {
     viewHistoryStep,
     returnToLive,
     stateComparison,
+    actionHistory,
+    activityFrames,
+    setMessageDisplayMode,
+    pinMessage,
   } = useSimulator();
   const latestEvent = clusterState.events[clusterState.events.length - 1];
 
@@ -180,6 +184,12 @@ export function App() {
                 messages={clusterState.messages}
                 selectedNodeId={uiState.selectedNodeId}
                 selectedMessageId={uiState.selectedMessageId}
+                pinnedMessageId={uiState.pinnedMessageId}
+                messageDisplayMode={uiState.messageDisplayMode}
+                currentActionStep={uiState.isInspectingHistory ? uiState.selectedHistoryStep : actionHistory.length}
+                actionHistory={actionHistory}
+                activityFrames={activityFrames}
+                onMessageDisplayModeChange={setMessageDisplayMode}
                 onSelectNode={selectNode}
                 onSelectMessage={selectMessage}
               />
@@ -190,6 +200,11 @@ export function App() {
                 displayMode={uiState.displayMode}
                 scenarioDescription={scenario.description}
                 onSelectMessage={selectMessage}
+                pinnedMessageId={uiState.pinnedMessageId}
+                onPinMessage={pinMessage}
+                messageDisplayMode={uiState.messageDisplayMode}
+                currentActionStep={uiState.isInspectingHistory ? uiState.selectedHistoryStep : actionHistory.length}
+                activityFrames={activityFrames}
                 onCrashNode={crashNode}
                 onRestartNode={restartNode}
                 mutationsDisabled={uiState.isInspectingHistory}

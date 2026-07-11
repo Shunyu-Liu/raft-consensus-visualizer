@@ -1,52 +1,28 @@
 import type { RaftMessage } from "../../simulator/types";
-import type { NodePosition } from "./MessageLayer";
-import { getMessageDisplayName } from "./messageDisplay";
+import type { MessageActivityKind } from "./messageActivity";
+import type { Route } from "./messageRouting";
+import { getCompactMessageLabel } from "./messageDisplay";
 import styles from "./MessageLayer.module.css";
 
 interface MessageArrowProps {
   message: RaftMessage;
-  from: NodePosition;
-  to: NodePosition;
-  offset: number;
+  route: Route;
   isSelected: boolean;
+  isPinned: boolean;
+  activityKind?: MessageActivityKind;
+  activityStep?: number;
+  visibilityAge?: number;
   onSelect: () => void;
 }
 
-export function MessageArrow({
-  message,
-  from,
-  to,
-  offset,
-  isSelected,
-  onSelect,
-}: MessageArrowProps) {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  const length = Math.hypot(dx, dy) || 1;
-  const normalX = -dy / length;
-  const normalY = dx / length;
-  const bend = (offset - 1) * 18;
-  const startX = from.x + (dx / length) * 92 + normalX * bend;
-  const startY = from.y + (dy / length) * 64 + normalY * bend;
-  const endX = to.x - (dx / length) * 92 + normalX * bend;
-  const endY = to.y - (dy / length) * 64 + normalY * bend;
-  const midX = (startX + endX) / 2 + normalX * 12;
-  const midY = (startY + endY) / 2 + normalY * 12;
-  const path = `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
-
+export function MessageArrow({ message, route, isSelected, isPinned, activityKind, activityStep, visibilityAge, onSelect }: MessageArrowProps) {
   return (
-    <g
-      className={styles.arrowGroup}
-      data-message-type={message.type}
-      data-status={message.status}
-      data-selected={isSelected}
-      onClick={onSelect}
-    >
-      <path className={styles.hitPath} d={path} />
-      <path className={styles.path} d={path} markerEnd="url(#message-arrow)" />
-      <foreignObject x={midX - 54} y={midY - 14} width="108" height="28">
-        <button type="button" className={styles.label} onClick={onSelect}>
-          {getMessageDisplayName(message)}
+    <g className={styles.arrowGroup} data-message-id={message.id} data-message-type={message.type} data-from={message.from} data-to={message.to} data-status={message.status} data-selected={isSelected} data-pinned={isPinned} data-activity={activityKind} data-activity-step={activityStep} data-visibility-age={visibilityAge} data-lane={route.lane} onClick={onSelect}>
+      <path className={styles.hitPath} d={route.path} data-route-path="hit" />
+      <path className={styles.path} d={route.path} markerEnd="url(#message-arrow)" data-route-path="visual" />
+      <foreignObject x={route.labelRect.x} y={route.labelRect.y} width={route.labelWidth} height={route.labelHeight}>
+        <button type="button" className={styles.label} aria-label={`${getCompactMessageLabel(message)} from Node ${message.from} to Node ${message.to}, ${message.status}${isPinned ? ", pinned historical message" : ""}`} onClick={onSelect}>
+          {getCompactMessageLabel(message)}{isPinned ? " · Pinned" : ""}
         </button>
       </foreignObject>
     </g>

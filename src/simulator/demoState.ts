@@ -82,6 +82,8 @@ export const demoUIState: SimulatorUIState = {
   selectedNodeId: "B",
   selectedMessageId: null,
   displayMode: "basic",
+  messageDisplayMode: "focus",
+  pinnedMessageId: null,
   theme: "light",
   isInspectingHistory: false,
   selectedHistoryStep: 0,

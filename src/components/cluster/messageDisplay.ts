@@ -37,3 +37,15 @@ export function getMessageDisplayName(message: RaftMessage): string {
 
   return `Message${suffix}`;
 }
+
+export function getCompactMessageLabel(message: RaftMessage): string {
+  if (isRequestVoteMessage(message)) return "Vote request";
+  if (isRequestVoteResponseMessage(message)) return message.payload.voteGranted ? "Vote granted" : "Vote denied";
+  if (isHeartbeatMessage(message)) return "Heartbeat";
+  if (isAppendEntriesMessage(message)) {
+    if (message.payload.purpose === "commit_update") return "Commit update";
+    return `Append ×${message.payload.entries.length}`;
+  }
+  if (isAppendEntriesResponseMessage(message)) return message.payload.success ? "Ack" : "Reject";
+  return "RPC";
+}

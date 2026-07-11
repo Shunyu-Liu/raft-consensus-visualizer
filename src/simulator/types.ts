@@ -4,6 +4,8 @@ export type NodeId = string;
 /** Stable identifier for a visualized or queued RPC message. */
 export type MessageId = string;
 
+export type MessageDisplayMode = "focus" | "context" | "all";
+
 /** Stable identifier for a deterministic learning scenario. */
 export type ScenarioId = string;
 
@@ -82,6 +84,8 @@ export interface SimulatorUIState {
   selectedNodeId: NodeId | null;
   selectedMessageId: MessageId | null;
   displayMode: "basic" | "advanced";
+  messageDisplayMode: MessageDisplayMode;
+  pinnedMessageId: MessageId | null;
   theme: "light" | "dark";
   isInspectingHistory: boolean;
   selectedHistoryStep: number;
