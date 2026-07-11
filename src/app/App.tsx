@@ -7,6 +7,7 @@ import { LearnPage } from "../components/learn/LearnPage";
 import { AppNavigation, type AppPage } from "../components/navigation/AppNavigation";
 import { NetworkStatusPanel } from "../components/network/NetworkStatusPanel";
 import { EventTimeline } from "../components/timeline/EventTimeline";
+import { VerificationPanel } from "../components/debug/VerificationPanel";
 import { useSimulator } from "../state/useSimulator";
 import type { ScenarioId } from "../simulator/types";
 import styles from "./App.module.css";
@@ -37,6 +38,13 @@ export function App() {
     healPartition,
     toggleDisplayMode,
     toggleTheme,
+    invariantResult,
+    createTrace,
+    loadTrace,
+    replayCurrentTrace,
+    viewHistoryStep,
+    returnToLive,
+    stateComparison,
   } = useSimulator();
   const latestEvent = clusterState.events[clusterState.events.length - 1];
 
@@ -114,10 +122,10 @@ export function App() {
             uiState={uiState}
             scenarioName={scenario.name}
             scenarios={scenarios}
-            canStep={controlState.playbackStatus !== "completed"}
+            canStep={controlState.playbackStatus !== "completed" && !uiState.isInspectingHistory}
             canStart={
-              controlState.playbackStatus === "idle" ||
-              controlState.playbackStatus === "paused"
+              !uiState.isInspectingHistory && (controlState.playbackStatus === "idle" ||
+              controlState.playbackStatus === "paused")
             }
             canPause={controlState.playbackStatus === "running"}
             onStart={start}
@@ -134,9 +142,23 @@ export function App() {
             <h1 className={styles.pageTitle}>Simulator</h1>
             <section className={styles.notice}>{DISCLAIMER}</section>
 
+            <VerificationPanel
+              invariantResult={invariantResult}
+              displayMode={uiState.displayMode}
+              isInspectingHistory={uiState.isInspectingHistory}
+              selectedHistoryStep={uiState.selectedHistoryStep}
+              historyStepCount={uiState.historyStepCount}
+              stateComparison={stateComparison}
+              onCreateTrace={createTrace}
+              onLoadTrace={loadTrace}
+              onReplay={replayCurrentTrace}
+              onViewStep={viewHistoryStep}
+              onReturnToLive={returnToLive}
+            />
+
             <ClientCommandPanel
               canSubmit={
-                scenario.capabilities.clientCommands &&
+                !uiState.isInspectingHistory && scenario.capabilities.clientCommands &&
                 Object.values(clusterState.nodes).filter(
                   (node) => node.role === "leader" && node.status === "running",
                 ).length === 1
@@ -147,7 +169,7 @@ export function App() {
 
             <NetworkStatusPanel
               clusterState={clusterState}
-              canControl={scenario.capabilities.networkPartition}
+              canControl={!uiState.isInspectingHistory && scenario.capabilities.networkPartition}
               onCreatePartition={createPresetPartition}
               onHealNetwork={healPartition}
             />
@@ -170,6 +192,7 @@ export function App() {
                 onSelectMessage={selectMessage}
                 onCrashNode={crashNode}
                 onRestartNode={restartNode}
+                mutationsDisabled={uiState.isInspectingHistory}
               />
             </section>
 

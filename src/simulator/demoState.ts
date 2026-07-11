@@ -83,4 +83,7 @@ export const demoUIState: SimulatorUIState = {
   selectedMessageId: null,
   displayMode: "basic",
   theme: "light",
+  isInspectingHistory: false,
+  selectedHistoryStep: 0,
+  historyStepCount: 0,
 };

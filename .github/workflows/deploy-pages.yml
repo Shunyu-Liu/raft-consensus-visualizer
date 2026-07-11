@@ -32,7 +32,39 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Coverage
+        run: npm run test:coverage
+
+      - name: Build quality check
+        run: npm run build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser smoke tests
+        run: npm run test:e2e -- --grep "Simulator and Learn|basic-leader-election"
+
+      - name: Upload browser failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-playwright-failure-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Build Pages artifact
         run: npm run build
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/

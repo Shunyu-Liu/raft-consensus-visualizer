@@ -77,6 +77,18 @@
   }
 
   .controls {
+    width: 100%;
     justify-content: flex-start;
+  }
+
+  .selectLabel {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .selectLabel select {
+    width: 100%;
+    min-width: 0;
   }
 }

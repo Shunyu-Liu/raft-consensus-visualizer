@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added
+
+- Runtime Raft invariant checking and every-step audits for all five deterministic scenarios.
+- Versioned deterministic trace export, validated import, real action replay, and state comparison.
+- Time travel controls with historical mutation guards and return-to-live behavior.
+- Playwright Chromium coverage for navigation, scenarios, traces, history, mobile layout, and browser errors.
+- Coverage thresholds, CI end-to-end quality gates, and pre-deployment browser smoke tests.
+
+### Fixed
+
+- Avoided runtime action ID collisions with scripted scenario action IDs.
+- Continued automatic playback after each completed action.
+- Prevented the scenario selector from causing horizontal overflow on mobile viewports.
+
 ## [1.0.0] - 2026-07-11
 
 ### Added

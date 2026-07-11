@@ -10,6 +10,7 @@ React UI
   -> RaftSimulator
   -> Transition handlers
   -> EventQueue / MessageQueue
+  -> Invariant validation / Trace recording
 ```
 
 ## Simulator Core
@@ -31,3 +32,5 @@ Teaching content is stored as typed data in `src/content/`. The Learn page rende
 ## Determinism
 
 Scenarios use deterministic scheduled actions and logical time. Reset recreates the initial simulator state and action queue so tests and teaching flows are reproducible.
+
+Executed actions retain full before and after snapshots for trace export and time travel. Historical views are derived by replaying the first N actions from a fresh scenario simulator; historical state is never written into `ClusterState` as UI state.

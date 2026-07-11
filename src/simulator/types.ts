@@ -83,6 +83,9 @@ export interface SimulatorUIState {
   selectedMessageId: MessageId | null;
   displayMode: "basic" | "advanced";
   theme: "light" | "dark";
+  isInspectingHistory: boolean;
+  selectedHistoryStep: number;
+  historyStepCount: number;
 }
 
 /** A human-readable change produced by a simulator transition. */

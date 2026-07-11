@@ -4,6 +4,9 @@ import { MessageQueue } from "./MessageQueue";
 import { applyTransition } from "../transitions/applyTransition";
 import type { ActionHandler, TransitionContext } from "../transitions/types";
 import type { ClusterState, ScheduledAction, SimulationEvent } from "../types";
+import { validateClusterInvariants, validateScheduledActions } from "../invariants/validateClusterInvariants";
+import type { InvariantValidationResult } from "../invariants/types";
+import type { TraceActionRecord } from "../trace/types";
 
 export interface StepResult {
   executed: boolean;
@@ -20,18 +23,24 @@ export class RaftSimulator {
   private readonly eventQueue = new EventQueue();
   private messageQueue: MessageQueue;
   private readonly handlers = new Map<string, ActionHandler>();
-  private readonly eventIdGenerator = new IdGenerator();
-  private readonly messageIdGenerator = new IdGenerator();
-  private readonly actionIdGenerator = new IdGenerator();
+  private readonly eventIdGenerator: IdGenerator;
+  private readonly messageIdGenerator: IdGenerator;
+  private readonly actionIdGenerator: IdGenerator;
   private nextSequence = 1;
+  private actionHistory: TraceActionRecord[] = [];
+  private lastInvariantResult: InvariantValidationResult = { valid: true, violations: [] };
 
   constructor(initialState: ClusterState, initialActions: ScheduledAction[] = []) {
     this.initialState = structuredClone(initialState);
     this.initialActions = structuredClone(initialActions);
     this.state = structuredClone(initialState);
+    this.eventIdGenerator = new IdGenerator(nextAvailableId(initialState.events.map((event) => event.id), "event"));
+    this.messageIdGenerator = new IdGenerator(nextAvailableId(initialState.messages.map((message) => message.id), "message"));
+    this.actionIdGenerator = new IdGenerator(nextAvailableId(initialActions.map((action) => action.id), "action"));
     this.messageQueue = new MessageQueue(this.state.messages);
     this.registerHandler("engine_demo_tick", createEngineDemoTickHandler());
     this.restoreInitialActions();
+    this.lastInvariantResult = this.validateInvariants();
   }
 
   getState(): ClusterState {
@@ -40,6 +49,38 @@ export class RaftSimulator {
 
   getPendingActions(): ScheduledAction[] {
     return this.eventQueue.toArray();
+  }
+
+  getInitialState(): ClusterState {
+    return structuredClone(this.initialState);
+  }
+
+  getInitialActions(): ScheduledAction[] {
+    return structuredClone(this.initialActions);
+  }
+
+  getActionHistory(): TraceActionRecord[] {
+    return structuredClone(this.actionHistory);
+  }
+
+  getHistoryState(step: number): ClusterState {
+    if (!Number.isInteger(step) || step < 0 || step > this.actionHistory.length) {
+      throw new Error(`History step must be between 0 and ${this.actionHistory.length}.`);
+    }
+    return step === 0
+      ? this.getInitialState()
+      : structuredClone(this.actionHistory[step - 1].stateAfter);
+  }
+
+  validateInvariants(): InvariantValidationResult {
+    const stateResult = validateClusterInvariants(this.state);
+    const actionResult = validateScheduledActions(this.getPendingActions());
+    const violations = [...stateResult.violations, ...actionResult.violations];
+    return { valid: !violations.some((violation) => violation.severity === "error"), violations };
+  }
+
+  getLastInvariantResult(): InvariantValidationResult {
+    return structuredClone(this.lastInvariantResult);
   }
 
   registerHandler(actionType: string, handler: ActionHandler): void {
@@ -88,6 +129,8 @@ export class RaftSimulator {
       };
     }
 
+    const stateBefore = this.getState();
+    const messagesBefore = new Map(stateBefore.messages.map((message) => [message.id, JSON.stringify(message)]));
     const handler = this.handlers.get(action.type);
     if (!handler) {
       throw new Error(`No action handler registered for "${action.type}".`);
@@ -118,6 +161,21 @@ export class RaftSimulator {
       this.schedule(scheduledAction);
     }
 
+    const stateAfter = this.getState();
+    this.actionHistory.push({
+      order: this.actionHistory.length + 1,
+      action: structuredClone(action),
+      logicalTimeBefore: stateBefore.logicalTime,
+      logicalTimeAfter: stateAfter.logicalTime,
+      stateBefore,
+      stateAfter,
+      emittedEventIds: emittedEvents.map((event) => event.id),
+      affectedMessageIds: stateAfter.messages
+        .filter((message) => messagesBefore.get(message.id) !== JSON.stringify(message))
+        .map((message) => message.id),
+    });
+    this.lastInvariantResult = this.validateInvariants();
+
     return {
       executed: true,
       action: structuredClone(action),
@@ -134,7 +192,9 @@ export class RaftSimulator {
     this.messageIdGenerator.reset();
     this.actionIdGenerator.reset();
     this.nextSequence = 1;
+    this.actionHistory = [];
     this.restoreInitialActions();
+    this.lastInvariantResult = this.validateInvariants();
   }
 
   hasPendingActions(): boolean {
@@ -163,6 +223,13 @@ export class RaftSimulator {
       this.schedule(action);
     }
   }
+}
+
+function nextAvailableId(ids: string[], prefix: string): number {
+  return ids.reduce((nextValue, id) => {
+    const match = new RegExp(`^${prefix}-(\\d+)$`).exec(id);
+    return match ? Math.max(nextValue, Number(match[1]) + 1) : nextValue;
+  }, 1);
 }
 
 function createEngineDemoTickHandler(): ActionHandler {
