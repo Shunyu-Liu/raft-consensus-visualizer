@@ -1,7 +1,7 @@
 {
   "name": "raft-consensus-visualizer",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Interactive educational visualization of the Raft consensus algorithm.",
   "license": "MIT",
   "author": "Shunyu Liu",

@@ -2,9 +2,24 @@
 
 ## [Unreleased]
 
-### Planned
+## [1.2.0] - 2026-07-11
 
-- Message focus, context, and all display modes with deterministic obstacle-aware RPC routing.
+### Added
+
+- Focus, Context, and All message display modes.
+- Current-action message visualization and No-RPC action feedback.
+- Historical message pinning and time-travel-safe message filtering.
+- Node-boundary-aware RPC rendering and direction-aware deterministic lanes.
+- Obstacle-aware message routing with route overlap and crossing penalties.
+- Bézier-based label placement and label collision reduction.
+- Additional browser acceptance tests.
+
+### Fixed
+
+- Restored SVG arrowheads after the message routing refactor.
+- Kept arrowhead colors consistent with RPC paths.
+- Corrected Focus and Context hidden-message copy.
+- Unified visible-message counting and rendering logic.
 
 ## [1.1.0] - 2026-07-11
 
