@@ -1,12 +1,24 @@
 # Raft Explorer
 
+[![CI](https://github.com/Shunyu-Liu/raft-consensus-visualizer/actions/workflows/ci.yml/badge.svg)](https://github.com/Shunyu-Liu/raft-consensus-visualizer/actions/workflows/ci.yml)
+[![Deploy GitHub Pages](https://github.com/Shunyu-Liu/raft-consensus-visualizer/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Shunyu-Liu/raft-consensus-visualizer/actions/workflows/deploy-pages.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Interactive educational visualization of the Raft consensus algorithm.
 
 Raft Explorer is an educational simulator designed to visualize the core ideas of the Raft consensus algorithm. It is not a production-ready Raft implementation.
 
+## Live Demo
+
+https://shunyu-liu.github.io/raft-consensus-visualizer/
+
+Simulator: https://shunyu-liu.github.io/raft-consensus-visualizer/#/simulator
+
+Learn: https://shunyu-liu.github.io/raft-consensus-visualizer/#/learn
+
 ## Current Status
 
-Phase 11 — Local release validation and dependency security hardening is implemented. Remote GitHub publication is pending GitHub CLI availability and repository setup.
+Phase 11B remote publication is complete. Continuous integration and the live GitHub Pages deployment are active on `main`.
 
 Implemented:
 
