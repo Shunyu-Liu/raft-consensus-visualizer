@@ -1,0 +1,79 @@
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--surface-panel);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.panel p {
+  margin: 5px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.controls label {
+  display: grid;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.controls input {
+  width: min(320px, 42vw);
+  min-height: 36px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 0 10px;
+  color: var(--text-primary);
+  background: var(--surface-control);
+}
+
+.controls button {
+  min-height: 36px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 0 12px;
+  color: var(--text-primary);
+  background: var(--surface-control);
+}
+
+.controls button:disabled,
+.controls input:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.message {
+  font-weight: 700;
+}
+
+@media (max-width: 860px) {
+  .panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input {
+    width: 100%;
+  }
+}

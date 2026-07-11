@@ -1,0 +1,103 @@
+:root {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --surface-root: #eef2f5;
+  --surface-raised: #f7f9fb;
+  --surface-panel: #ffffff;
+  --surface-card: #fbfcfd;
+  --surface-control: #ffffff;
+  --text-primary: #17202a;
+  --text-secondary: #5e6b78;
+  --text-tertiary: #83909c;
+  --border-muted: #d9e0e7;
+  --border-strong: #bdc8d2;
+  --accent: #256f8f;
+  --color-success: #2b8a57;
+  --color-warning: #c97818;
+  --color-danger: #b42318;
+  --role-follower: #66839a;
+  --role-candidate: #c97818;
+  --role-leader: #2b8a57;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --shadow-soft: 0 12px 32px rgb(25 40 55 / 6%);
+  --shadow-focus: 0 16px 36px rgb(37 111 143 / 16%);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-root: #11161d;
+  --surface-raised: #151c24;
+  --surface-panel: #1b242d;
+  --surface-card: #202b35;
+  --surface-control: #18212a;
+  --text-primary: #eef4f8;
+  --text-secondary: #a7b5c1;
+  --text-tertiary: #778795;
+  --border-muted: #33424f;
+  --border-strong: #465767;
+  --accent: #65b8d5;
+  --color-success: #66c78f;
+  --color-warning: #e5a042;
+  --color-danger: #ff8a80;
+  --role-follower: #8ea5b5;
+  --role-candidate: #e5a042;
+  --role-leader: #66c78f;
+  --shadow-soft: 0 12px 32px rgb(0 0 0 / 22%);
+  --shadow-focus: 0 16px 36px rgb(101 184 213 / 18%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--accent);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 70%, white);
+  outline-offset: 2px;
+}
+
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

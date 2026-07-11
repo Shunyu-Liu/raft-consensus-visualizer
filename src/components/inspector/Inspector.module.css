@@ -1,0 +1,242 @@
+.inspector {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.panel {
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 16px;
+  background: var(--surface-panel);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tabs button {
+  min-height: 34px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  color: var(--text-primary);
+  background: var(--surface-control);
+}
+
+.tabs button[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--surface-panel);
+  background: var(--accent);
+}
+
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.panel h3 {
+  margin: 0 0 10px;
+  font-size: 0.94rem;
+}
+
+.kicker {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.explanationList,
+.nodeDetails {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.explanationList dt,
+.nodeDetails dt {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.explanationList dd,
+.nodeDetails dd {
+  margin: 3px 0 0;
+  font-size: 0.86rem;
+}
+
+.nodeDetails div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.empty {
+  color: var(--text-secondary);
+}
+
+.result {
+  margin: 14px 0 0;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--role-leader);
+  background: var(--surface-card);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.nodeActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.nodeActions button {
+  min-height: 34px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 0 10px;
+  color: var(--text-primary);
+  background: var(--surface-control);
+}
+
+.nodeActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.advanced {
+  margin-top: 14px;
+  border-top: 1px solid var(--border-muted);
+  padding-top: 14px;
+}
+
+.advanced pre {
+  overflow: auto;
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--text-primary);
+  background: var(--surface-root);
+  font-size: 0.78rem;
+}
+
+.messageList {
+  display: grid;
+  gap: 8px;
+}
+
+.messageItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: var(--text-primary);
+  text-align: left;
+  background: var(--surface-card);
+}
+
+.messageItem[data-selected="true"] {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-focus);
+}
+
+.messageItem span {
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.messageItem small {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.logTable {
+  margin-top: 14px;
+  border-top: 1px solid var(--border-muted);
+  padding-top: 12px;
+  overflow-x: auto;
+}
+
+.logTable h3 {
+  margin: 0 0 8px;
+}
+
+.logTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.logTable th,
+.logTable td {
+  border-bottom: 1px solid var(--border-muted);
+  padding: 6px 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.logComparison {
+  display: grid;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.comparisonStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.comparisonStats div {
+  border: 1px solid var(--border-muted);
+  border-radius: 7px;
+  padding: 8px;
+  background: var(--surface-card);
+}
+
+.comparisonStats dt {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.comparisonStats dd {
+  margin: 3px 0 0;
+  font-weight: 800;
+}
+
+.logComparison table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+}
+
+.logComparison th,
+.logComparison td {
+  border-bottom: 1px solid var(--border-muted);
+  padding: 6px 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.logComparison tr[data-status="conflict"] td {
+  color: var(--role-candidate);
+  font-weight: 800;
+}
+
+.logComparison tr[data-status="common"] td {
+  color: var(--text-primary);
+}
+
+.logComparison tr[data-status="missing"] td,
+.logComparison tr[data-status="extra"] td {
+  color: var(--text-secondary);
+}

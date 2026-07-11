@@ -1,0 +1,92 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.arrowGroup {
+  pointer-events: auto;
+}
+
+.path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  opacity: 0.78;
+}
+
+.hitPath {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18;
+}
+
+.marker {
+  fill: var(--accent);
+}
+
+.label {
+  width: 100%;
+  height: 24px;
+  border: 1px solid var(--border-muted);
+  border-radius: 999px;
+  color: var(--text-primary);
+  background: var(--surface-panel);
+  font-size: 0.68rem;
+  font-weight: 800;
+  box-shadow: var(--shadow-soft);
+}
+
+.arrowGroup[data-message-type="request_vote"] .path {
+  stroke-dasharray: 8 5;
+  stroke: var(--role-candidate);
+}
+
+.arrowGroup[data-message-type="request_vote_response"] .path {
+  stroke-dasharray: 2 5;
+  stroke: var(--role-follower);
+}
+
+.arrowGroup[data-message-type="append_entries"] .path {
+  stroke: var(--role-leader);
+  stroke-width: 2.5;
+}
+
+.arrowGroup[data-message-type="append_entries_response"] .path {
+  stroke: var(--accent);
+  stroke-width: 1.7;
+}
+
+.arrowGroup[data-status="queued"] .path {
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.arrowGroup[data-status="dropped"] .path {
+  stroke: #dc2626;
+  stroke-dasharray: 6 6;
+  opacity: 0.95;
+}
+
+.arrowGroup[data-status="dropped"] .label {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.arrowGroup[data-selected="true"] .path {
+  stroke-width: 4;
+  opacity: 1;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

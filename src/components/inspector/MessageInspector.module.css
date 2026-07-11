@@ -1,0 +1,69 @@
+.messageInspector {
+  display: grid;
+  gap: 12px;
+}
+
+.fields {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.fields div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fields dt {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.fields dd {
+  margin: 0;
+  text-align: right;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.payload {
+  border-top: 1px solid var(--border-muted);
+  padding-top: 10px;
+}
+
+.payload h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+}
+
+.note,
+.empty {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.note {
+  margin-bottom: 10px;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 9px;
+  background: var(--surface-card);
+}
+
+.entries {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.entry {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 9px;
+  background: var(--surface-card);
+  font-size: 0.8rem;
+}

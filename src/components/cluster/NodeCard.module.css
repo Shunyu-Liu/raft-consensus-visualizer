@@ -1,0 +1,155 @@
+.card {
+  width: 100%;
+  min-height: 212px;
+  border: 1px solid var(--border-muted);
+  border-left-width: 5px;
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--text-primary);
+  text-align: left;
+  background: var(--surface-card);
+  box-shadow: var(--shadow-soft);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.card:hover,
+.card[data-selected="true"] {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-focus);
+  transform: translateY(-1px);
+}
+
+.card[data-role="follower"] {
+  border-left-color: var(--role-follower);
+}
+
+.card[data-role="candidate"] {
+  border-left-color: var(--role-candidate);
+}
+
+.card[data-role="leader"] {
+  border-left-color: var(--role-leader);
+}
+
+.card[data-status="crashed"] {
+  border-left-color: #4b5563;
+  filter: grayscale(0.72);
+  opacity: 0.72;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.nodeName {
+  font-weight: 700;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.rolePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-muted);
+  border-radius: 999px;
+  padding: 4px 8px;
+  text-transform: capitalize;
+  font-size: 0.76rem;
+}
+
+.groupPill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px dashed var(--border-strong);
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.roleIcon {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--surface-panel);
+  background: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.metrics {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.metrics div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.metrics dt {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.metrics dd {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.logStrip {
+  display: flex;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-muted);
+}
+
+.emptyLog {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+
+.logEntry {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid var(--border-muted);
+  border-radius: 5px;
+  font-weight: 800;
+}
+
+.logEntry[data-status="uncommitted"] {
+  border-color: var(--role-candidate);
+}
+
+.logEntry[data-status="committed"] {
+  border-color: var(--role-leader);
+  background: color-mix(in srgb, var(--role-leader) 14%, transparent);
+}
+
+.logEntry[data-status="applied"] {
+  border-color: var(--role-leader);
+  color: var(--surface-panel);
+  background: var(--role-leader);
+}
