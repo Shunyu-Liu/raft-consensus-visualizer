@@ -26,7 +26,7 @@ export function MessageLayer({
   const accepted: Route[] = [];
 
   return (
-    <svg className={styles.layer} aria-label="Raft RPC messages">
+    <svg className={styles.layer} aria-label="Raft RPC messages" data-visible-message-count={visibleMessages.length}>
       <defs><marker id="message-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" className={styles.marker} /></marker></defs>
       {visibleMessages.map((message) => {
         const from = nodeBounds[message.from]; const to = nodeBounds[message.to];
@@ -39,7 +39,7 @@ export function MessageLayer({
         const naturalStart = displayMode === "focus" ? currentActionStep : Math.max(1, currentActionStep - 2);
         const naturalVisible = displayMode === "all" || activityFrames.some((candidate) => candidate.actionStep >= naturalStart && candidate.actionStep <= currentActionStep && candidate.messageIds.includes(message.id));
         const isPinned = message.id === pinnedMessageId && !naturalVisible;
-        return <MessageArrow key={message.id} message={message} route={route} isSelected={message.id === selectedMessageId} isPinned={isPinned} activityKind={frame?.activityByMessageId[message.id]} activityStep={activityStep} onSelect={() => onSelectMessage(message.id)} />;
+        return <MessageArrow key={message.id} message={message} route={route} isSelected={message.id === selectedMessageId} isPinned={isPinned} activityKind={frame?.activityByMessageId[message.id]} activityStep={activityStep} visibilityAge={activityStep === undefined ? undefined : Math.max(0, currentActionStep - activityStep)} onSelect={() => onSelectMessage(message.id)} />;
       })}
     </svg>
   );
