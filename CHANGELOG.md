@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Planned
+
+- Message focus, context, and all display modes with deterministic obstacle-aware RPC routing.
+
 ## [1.1.0] - 2026-07-11
 
 ### Added

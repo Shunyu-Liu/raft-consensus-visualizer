@@ -206,6 +206,8 @@ Raft Explorer uses runtime protocol invariant checking and deterministic replay 
 
 This is runtime invariant checking and deterministic replay. Raft Explorer is not a formally verified Raft implementation and does not claim a model-checking, TLA+, or protocol correctness proof.
 
+The canvas provides Focus, Context, and All message views. Activity is derived from adjacent action snapshots; deterministic lane assignment and obstacle-aware routing keep the current teaching action legible without deleting message history. See [Message Visualization](docs/MESSAGE_VISUALIZATION.md).
+
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
@@ -216,6 +218,7 @@ This is runtime invariant checking and deterministic replay. Raft Explorer is no
 - [Dependency Security](docs/DEPENDENCY_SECURITY.md)
 - [Verification](docs/VERIFICATION.md)
 - [Trace Format](docs/TRACE_FORMAT.md)
+- [Message Visualization](docs/MESSAGE_VISUALIZATION.md)
 - [Release Checklist](docs/RELEASE_CHECKLIST.md)
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
