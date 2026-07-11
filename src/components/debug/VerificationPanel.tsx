@@ -3,6 +3,7 @@ import type { InvariantValidationResult } from "../../simulator/invariants/types
 import { getTraceFileName } from "../../simulator/trace/createSimulationTrace";
 import { parseTraceJson } from "../../simulator/trace/parseTrace";
 import { serializeTrace } from "../../simulator/trace/serializeTrace";
+import { MAX_TRACE_FILE_SIZE_BYTES } from "../../simulator/trace/validateTrace";
 import type { RaftStateChange } from "../../simulator/trace/compareStates";
 import type { SimulationTrace } from "../../simulator/trace/types";
 import type { SimulatorUIState } from "../../simulator/types";
@@ -47,6 +48,11 @@ export function VerificationPanel(props: VerificationPanelProps) {
     const file = event.currentTarget.files?.[0];
     event.currentTarget.value = "";
     if (!file) return;
+    if (file.size > MAX_TRACE_FILE_SIZE_BYTES) {
+      setMessage(null);
+      setError("The selected trace file is too large. The maximum supported size is 10 MB.");
+      return;
+    }
     const validation = parseTraceJson(await file.text());
     if (!validation.valid || !validation.trace) {
       setMessage(null);

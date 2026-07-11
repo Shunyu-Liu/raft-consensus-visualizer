@@ -3,6 +3,7 @@ import { createSimulationTrace } from "../simulator/trace/createSimulationTrace"
 import { parseTraceJson } from "../simulator/trace/parseTrace";
 import { replayTrace } from "../simulator/trace/replayTrace";
 import { serializeTrace } from "../simulator/trace/serializeTrace";
+import { validateTrace } from "../simulator/trace/validateTrace";
 import { getScenario } from "../simulator/scenarios/registry";
 
 describe("deterministic simulation traces", () => {
@@ -25,6 +26,18 @@ describe("deterministic simulation traces", () => {
     const trace = runBasicTrace();
     trace.scenario.id = "missing";
     expect(parseTraceJson(serializeTrace(trace)).code).toBe("unavailable-scenario");
+  });
+
+  it("rejects traces over the supported action limit before replay", () => {
+    const trace = runBasicTrace();
+    expect(validateTrace({
+      ...trace,
+      executedActions: Array.from({ length: 10_001 }, () => trace.executedActions[0]),
+    })).toMatchObject({
+      valid: false,
+      code: "limit-exceeded",
+      message: "Trace exceeds the supported action limit.",
+    });
   });
 
   it("replays actions, events, IDs, logical time, and final state deterministically", () => {

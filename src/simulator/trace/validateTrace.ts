@@ -10,7 +10,14 @@ export type TraceValidationErrorCode =
   | "unsupported-version"
   | "missing-field"
   | "unavailable-scenario"
+  | "limit-exceeded"
   | "invalid-state";
+
+export const MAX_TRACE_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_TRACE_ACTIONS = 10_000;
+const MAX_TRACE_NODES = 100;
+const MAX_TRACE_MESSAGES = 100_000;
+const MAX_TRACE_EVENTS = 100_000;
 
 export interface TraceValidationResult {
   valid: boolean;
@@ -30,7 +37,9 @@ export function validateTrace(value: unknown): TraceValidationResult {
   if (!isRecord(value.createdBy) || value.createdBy.application !== "Raft Explorer" || typeof value.createdBy.applicationVersion !== "string") return failure("missing-field", "Trace creator metadata is missing or invalid.");
   if (!isClusterState(value.initialState) || !isClusterState(value.finalState)) return failure("invalid-state", "Trace state validation failed.");
   if (!Array.isArray(value.initialActions) || !value.initialActions.every(isScheduledAction)) return failure("missing-field", "Trace initialActions are missing or invalid.");
-  if (!Array.isArray(value.executedActions) || !value.executedActions.every(isTraceActionRecord)) return failure("missing-field", "Trace executedActions are missing or invalid.");
+  if (!Array.isArray(value.executedActions)) return failure("missing-field", "Trace executedActions are missing or invalid.");
+  if (value.executedActions.length > MAX_TRACE_ACTIONS) return failure("limit-exceeded", "Trace exceeds the supported action limit.");
+  if (!value.executedActions.every(isTraceActionRecord)) return failure("missing-field", "Trace executedActions are missing or invalid.");
   if (!isRecord(value.invariantSummary) || typeof value.invariantSummary.valid !== "boolean" || !Array.isArray(value.invariantSummary.violations) || !value.invariantSummary.violations.every(isInvariantViolation)) return failure("missing-field", "Trace invariant summary is missing or invalid.");
 
   const trace: SimulationTrace = {
@@ -72,6 +81,7 @@ export function validateTrace(value: unknown): TraceValidationResult {
 
 function isClusterState(value: unknown): value is ClusterState {
   if (!isRecord(value) || !isRecord(value.nodes) || !Array.isArray(value.messages) || !Array.isArray(value.events)) return false;
+  if (Object.keys(value.nodes).length > MAX_TRACE_NODES || value.messages.length > MAX_TRACE_MESSAGES || value.events.length > MAX_TRACE_EVENTS) return false;
   if (typeof value.currentStep !== "number" || typeof value.logicalTime !== "number") return false;
   return Object.values(value.nodes).every((node) =>
     isRecord(node) && typeof node.id === "string" && typeof node.role === "string" &&
